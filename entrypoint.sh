@@ -13,7 +13,7 @@ ipaddr=$(ifconfig eth0 | grep 'inet addr' | cut -d: -f2 | awk '{print $1}')
 echo "{ \"services\": [ { \"name\": \"pxc\", \"address\": \"$ipaddr\", \"port\": 3306, \"checks\": [ { \"name\": \"check if percona port is open\", \"tcp\": \"$ipaddr:3306\", \"interval\": \"15s\", \"timeout\": \"1s\" } ] } ] }" > /tmp/pxc.json
 
 # Starting consul client
-/bin/consul agent -retry-join $DISCOVERY_SERVICE -client 0.0.0.0 -bind $ipaddr -data-dir /tmp -config-file /tmp/pxc.json &
+/bin/consul agent -retry-join $DISCOVERY_SERVICE -client 0.0.0.0 -bind $ipaddr -node $SERVER_NAME-$hostname -data-dir /tmp -config-file /tmp/pxc.json &
 # wait to start the consul client
 sleep 15 
 
